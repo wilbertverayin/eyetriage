@@ -1,4 +1,5 @@
-'use server';
+// AI features disabled for static build
+
 /**
  * @fileOverview Summarizes online reviews for ophthalmologists.
  *
@@ -7,47 +8,18 @@
  * - SummarizeOphthalmologistReviewsOutput - The return type for the summarizeOphthalmologistReviews function.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-const SummarizeOphthalmologistReviewsInputSchema = z.object({
-  name: z.string().describe('The name of the ophthalmologist.'),
-  googleReviews: z.string().describe('Google reviews for the ophthalmologist.'),
-  socialMediaPosts: z.string().describe('Social media posts about the ophthalmologist.'),
-});
-export type SummarizeOphthalmologistReviewsInput = z.infer<typeof SummarizeOphthalmologistReviewsInputSchema>;
-
-const SummarizeOphthalmologistReviewsOutputSchema = z.object({
-  summary: z.string().describe('A summary of the Google reviews and social media posts.'),
-});
-export type SummarizeOphthalmologistReviewsOutput = z.infer<typeof SummarizeOphthalmologistReviewsOutputSchema>;
-
-export async function summarizeOphthalmologistReviews(input: SummarizeOphthalmologistReviewsInput): Promise<SummarizeOphthalmologistReviewsOutput> {
-  return summarizeOphthalmologistReviewsFlow(input);
+export interface SummarizeOphthalmologistReviewsInput {
+  name: string;
+  googleReviews: string;
+  socialMediaPosts: string;
 }
 
-const prompt = ai.definePrompt({
-  name: 'summarizeOphthalmologistReviewsPrompt',
-  input: {schema: SummarizeOphthalmologistReviewsInputSchema},
-  output: {schema: SummarizeOphthalmologistReviewsOutputSchema},
-  prompt: `You are a helpful assistant that summarizes reviews for ophthalmologists.
+export interface SummarizeOphthalmologistReviewsOutput {
+  summary: string;
+}
 
-  Summarize the following Google reviews and social media posts about the ophthalmologist. Focus on the overall sentiment and key themes.
-
-  Ophthalmologist Name: {{{name}}}
-  Google Reviews: {{{googleReviews}}}
-  Social Media Posts: {{{socialMediaPosts}}}
-  `,
-});
-
-const summarizeOphthalmologistReviewsFlow = ai.defineFlow(
-  {
-    name: 'summarizeOphthalmologistReviewsFlow',
-    inputSchema: SummarizeOphthalmologistReviewsInputSchema,
-    outputSchema: SummarizeOphthalmologistReviewsOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
-  }
-);
+export async function summarizeOphthalmologistReviews(_input: SummarizeOphthalmologistReviewsInput): Promise<SummarizeOphthalmologistReviewsOutput> {
+  return {
+    summary: 'AI features are not available in the static demo.',
+  };
+}
