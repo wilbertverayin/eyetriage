@@ -30,6 +30,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
+          <div role="note" className="bg-amber-100 px-4 py-2 text-center text-sm font-medium text-amber-950 dark:bg-amber-900 dark:text-amber-50">Demo only. Results are simulated and are not medical advice.</div>
           <Header />
           <main>
             {children}
