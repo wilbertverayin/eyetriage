@@ -6,9 +6,19 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { ThemeProvider } from "@/components/theme-provider";
 
+const description =
+  'AI-assisted eye triage and referral decision support for health professionals in rural and underserved communities in the Philippines.';
+
 export const metadata: Metadata = {
+  metadataBase: new URL('https://eyetriage.visibleclinic.com'),
   title: 'EyeTriage: AI-Powered Support for Smarter Referrals',
-  description: 'EyeTriage: AI-Powered Support for Smarter Referrals.',
+  description,
+  openGraph: {
+    title: 'EyeTriage: AI-Powered Support for Smarter Referrals',
+    description,
+    siteName: 'EyeTriage',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({

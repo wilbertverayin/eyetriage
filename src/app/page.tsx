@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { sendFeedback } from '@/app/feedback-action';
 
 export default function HomePage() {
   const router = useRouter();
@@ -20,9 +21,22 @@ export default function HomePage() {
     router.push('/dashboard');
   };
 
-  const handleSuggestionSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [isSendingFeedback, setIsSendingFeedback] = React.useState(false);
+
+  const handleSuggestionSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.target as HTMLFormElement;
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    setIsSendingFeedback(true);
+    const result = await sendFeedback({
+      suggestion: String(data.get('suggestion') ?? ''),
+      email: String(data.get('email') ?? ''),
+    });
+    setIsSendingFeedback(false);
+    if ('error' in result) {
+      toast({ title: "Feedback Not Sent", description: result.error, variant: "destructive" });
+      return;
+    }
     toast({
       title: "Feedback Sent!",
       description: "Thank you for your suggestion. We appreciate your input.",
@@ -39,7 +53,7 @@ export default function HomePage() {
         </div>
         <div className="mx-auto max-w-4xl py-24 sm:py-32 lg:py-40">
           <div className="grid grid-cols-1 items-center gap-12">
-            <div className="text-center">
+            <div id="about" className="text-center scroll-mt-24">
               <Badge variant="outline" className="mb-4 border-primary/50 text-primary bg-primary/10">
                 Our Mission
               </Badge>
@@ -51,7 +65,7 @@ export default function HomePage() {
               </p>
               <div className="mt-4 text-xs text-muted-foreground">
                 <p className="font-semibold">Disclaimer:</p>
-                <p>This tool is intended for use by qualified health professionals as a decision support tool and is not a substitute for professional medical judgment. All diagnoses and treatment decisions remain the responsibility of the healthcare provider. No patient data or images you enter are saved or stored by this application.</p>
+                <p>This tool is intended for use by qualified health professionals as a decision support tool and is not a substitute for professional medical judgment. All diagnoses and treatment decisions remain the responsibility of the healthcare provider. EyeTriage does not save patient data or images. To produce a result, the entered details and image are sent to Google's Gemini AI service for analysis. Do not enter names, full addresses or other details that identify the patient.</p>
               </div>
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <Button size="lg" onClick={handleGetStartedClick} className="text-lg font-bold py-4 px-10 rounded-full shadow-lg shadow-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/50 hover:scale-105 active:scale-100">
@@ -105,6 +119,8 @@ export default function HomePage() {
                       </Label>
                       <Textarea
                         id="suggestion-text"
+                        name="suggestion"
+                        maxLength={2000}
                         placeholder="Tell us how we can improve..."
                         required
                         className="mt-1"
@@ -118,12 +134,13 @@ export default function HomePage() {
                       <Input
                         type="email"
                         id="suggestion-email"
+                        name="email"
                         placeholder="you@example.com"
                         className="mt-1"
                       />
                     </div>
-                    <Button type="submit" variant="secondary" className="w-full">
-                      Send Feedback
+                    <Button type="submit" variant="secondary" className="w-full" disabled={isSendingFeedback}>
+                      {isSendingFeedback ? 'Sending...' : 'Send Feedback'}
                     </Button>
                   </form>
                 </dd>

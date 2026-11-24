@@ -389,8 +389,8 @@ export default function PatientDataSection({ onTriageResult, isProcessing, setIs
                 name="patientLocation"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Location (Detailed Address)</FormLabel>
-                    <FormControl><Textarea placeholder="e.g., 123 Rizal Street, Brgy. San Roque, Quezon City, Metro Manila, Philippines. Near the old market." {...field} rows={3} /></FormControl>
+                    <FormLabel>Location (Town/City, Province)</FormLabel>
+                    <FormControl><Textarea placeholder="e.g., Quezon City, Metro Manila. Do not enter a street address." {...field} rows={2} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
